@@ -2,7 +2,10 @@
 
 print("Battleship")
 
-empty = '  O  '
+empty = '  .  '
+ship =  '  O  '
+miss =  '  *  '
+hit =   '  #  '
 
 rows = 8
 cols = 8
@@ -22,7 +25,7 @@ def print_header(columns):
     left_margin = '   '
     header_text = ''
     for i in range(columns):
-        header_text += empty.replace('O', str(i))
+        header_text += f'  {i}  '
     header_separator = '-' * len(header_text)
     print(f'{left_margin}{header_text}')
     print(f'{left_margin}{header_separator}')
@@ -38,4 +41,13 @@ def print_board(board):
         print(f'{index} |', end='')
         print_row(row)
 
+
+
+
+board[3][2] = ship
+board[3][3] = ship
+board[2][4] = miss
+board[3][4] = hit
+board[3][5] = ship
+board[4][4] = miss
 print_board(board)
