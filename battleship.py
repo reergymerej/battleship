@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import random
 
-print("Battleship")
+print("\nBattleship\n\n")
 
 EMPTY = '  .  '
 SHIP =  '  O  '
 MISS =  '  *  '
-HIT =   '  #  '
+HIT =   '  X  '
 
 class Cell:
     def __init__(self, state):
@@ -17,6 +17,12 @@ class Cell:
 
     def print(self):
         print(self.state, end='')
+
+    def shoot(self):
+        if self.state == SHIP:
+            self.state = HIT
+        else:
+            self.state = MISS
 
 class Row:
     def __init__(self):
@@ -99,6 +105,11 @@ class Board:
 
         self.ships.append(ship)
 
+    def fire_at(self, x, y):
+        row = self.rows[y]
+        cell = row.cells[x]
+        cell.shoot()
+        # TODO check to see if the boat is gone
 
 rows = 10
 cols = 10
@@ -107,3 +118,10 @@ ship = Ship(4)
 board.add_ship(ship)
 
 board.print()
+
+while True:
+    x = int(input('x: '))
+    y = int(input('y: '))
+    board.fire_at(x, y)
+    print('\n'*50)
+    board.print()
