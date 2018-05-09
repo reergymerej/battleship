@@ -51,15 +51,17 @@ class Board:
     def __init__(self, rows, cols):
         self.row_count = rows
         self.col_count = cols
-        self.rows = []
-
-        for r in range(rows):
-            row = Row()
-            for c in range(cols):
-                row.append(empty)
-            self.rows.append(row)
-
+        self.rows = self.build_rows(rows, cols)
         self.header = Header(cols)
+
+    def build_rows(self, row_count, col_count):
+        rows = []
+        for r in range(row_count):
+            row = Row()
+            for c in range(col_count):
+                row.append(empty)
+            rows.append(row)
+        return rows
 
     def set_cell(self, col, row, state):
         self.rows[row].set_cell(col, state)
@@ -69,7 +71,6 @@ class Board:
         for index, row in enumerate(self.rows):
             print(f'{index} |', end='')
             row.print()
-
 
 rows = 8
 cols = 8
