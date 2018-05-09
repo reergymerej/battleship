@@ -7,47 +7,79 @@ ship =  '  O  '
 miss =  '  *  '
 hit =   '  #  '
 
+class Cell:
+    def __init__(self, state):
+        self.state = state
+
+    def set_state(self, state):
+        self.state = state
+
+    def print(self):
+        print(self.state, end='')
+
+class Row:
+    def __init__(self):
+        self.cells = []
+
+    def append(self, cell_state):
+        self.cells.append(Cell(cell_state))
+
+    def set_cell(self, cell, state):
+        self.cells[cell].set_state(state)
+
+    def print(self):
+        for cell in self.cells:
+            cell.print()
+        print('\n')
+
+class Header:
+    def __init__(self, columns):
+        header_text = ''
+        for i in range(columns):
+            header_text += f'  {i}  '
+        header_separator = '-' * len(header_text)
+        self.header_text = header_text
+        self.header_separator = header_separator
+
+    def print(self):
+        # row labels offset
+        left_margin = '   '
+        print(f'{left_margin}{self.header_text}')
+        print(f'{left_margin}{self.header_separator}')
+
+class Board:
+    def __init__(self, rows, cols):
+        self.row_count = rows
+        self.col_count = cols
+        self.rows = []
+
+        for r in range(rows):
+            row = Row()
+            for c in range(cols):
+                row.append(empty)
+            self.rows.append(row)
+
+        self.header = Header(cols)
+
+    def set_cell(self, col, row, state):
+        self.rows[row].set_cell(col, state)
+
+    def print(self):
+        self.header.print()
+        for index, row in enumerate(self.rows):
+            print(f'{index} |', end='')
+            row.print()
+
+
 rows = 8
 cols = 8
-board = []
+board = Board(rows, cols)
 
-for r in range(rows):
-    row = []
-    for c in range(cols):
-        row.append(empty)
-    board.append(row)
+board.set_cell(3, 2, ship)
+board.set_cell(3, 3, ship)
+board.set_cell(2, 4, miss)
+board.set_cell(3, 4, hit)
+board.set_cell(3, 5, ship)
+board.set_cell(4, 4, miss)
 
-def print_cell(cell):
-    print(cell, end='')
-
-def print_header(columns):
-    # row labels offset
-    left_margin = '   '
-    header_text = ''
-    for i in range(columns):
-        header_text += f'  {i}  '
-    header_separator = '-' * len(header_text)
-    print(f'{left_margin}{header_text}')
-    print(f'{left_margin}{header_separator}')
-
-def print_row(row):
-    for cell in row:
-        print_cell(cell)
-    print('\n')
-
-def print_board(board):
-    print_header(len(board[0]))
-    for index, row in enumerate(board):
-        print(f'{index} |', end='')
-        print_row(row)
-
-
-
-
-board[3][2] = ship
-board[3][3] = ship
-board[2][4] = miss
-board[3][4] = hit
-board[3][5] = ship
-board[4][4] = miss
-print_board(board)
+board.print()
