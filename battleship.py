@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
+import random
 
 print("Battleship")
 
-empty = '  .  '
-ship =  '  O  '
-miss =  '  *  '
-hit =   '  #  '
+EMPTY = '  .  '
+SHIP =  '  O  '
+MISS =  '  *  '
+HIT =   '  #  '
 
 class Cell:
     def __init__(self, state):
@@ -47,19 +48,25 @@ class Header:
         print(f'{left_margin}{self.header_text}')
         print(f'{left_margin}{self.header_separator}')
 
+class Ship:
+    def __init__(self, size):
+        self.size = size
+        self.orientation = 'horizontal'
+
 class Board:
     def __init__(self, rows, cols):
         self.row_count = rows
         self.col_count = cols
         self.rows = self.build_rows(rows, cols)
         self.header = Header(cols)
+        self.ships = []
 
     def build_rows(self, row_count, col_count):
         rows = []
         for r in range(row_count):
             row = Row()
             for c in range(col_count):
-                row.append(empty)
+                row.append(EMPTY)
             rows.append(row)
         return rows
 
@@ -72,15 +79,31 @@ class Board:
             print(f'{index} |', end='')
             row.print()
 
-rows = 8
-cols = 8
-board = Board(rows, cols)
+    def get_position_for_new_ship(self, ship):
+        # Find a location for it.
+        # This will get more fun as the board becomes more full.
+        # TODO vary the size adjustment based on ship.orientation
+        x = random.randint(0, self.col_count - 1 - ship.size)
+        y = random.randint(0, self.row_count - 1)
+        return [x, y]
 
-board.set_cell(3, 2, ship)
-board.set_cell(3, 3, ship)
-board.set_cell(2, 4, miss)
-board.set_cell(3, 4, hit)
-board.set_cell(3, 5, ship)
-board.set_cell(4, 4, miss)
+    def add_ship(self, ship):
+        # It seems like the position is a state for the board, not the ship.
+        # I'm putting it on the ship for now for convenience.
+        ship.position = self.get_position_for_new_ship(ship)
+        # Based on the ship's position, we need to alter the cells in the board.
+        row = self.rows[ship.position[1]]
+        start_col = ship.position[0]
+        for i in range(start_col, start_col + ship.size):
+            row.set_cell(i, SHIP)
+
+        self.ships.append(ship)
+
+
+rows = 10
+cols = 10
+board = Board(rows, cols)
+ship = Ship(4)
+board.add_ship(ship)
 
 board.print()
